@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lixeira Inteligente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #trash-level {
+      font-size: 36px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>NÍVEL DA LIXEIRA:</h1>
+  <div id="trash-level"></div>
+  <script>
+    function getTrashLevel() {
+      fetch("https://api.github.com/repos/Saatake/lixeirainteligente/issues")
+      .then(response => response.json())
+      .then(data => {
+        const trashLevel = JSON.parse(data[0].body.split(": ")[1]);
+        const trashLevelDiv = document.getElementById("trash-level");
+        trashLevelDiv.innerText = trashLevel;
+        switch (trashLevel) {
+          case "1":
+            trashLevelDiv.style.color = "white"; // Nenhum lixo
+            break;
+          case "2":
+            trashLevelDiv.style.color = "yellow"; // Pouco lixo
+            break;
+          case "3":
+            trashLevelDiv.style.color = "orange"; // Bastante lixo
+            break;
+          case "4":
+            trashLevelDiv.style.color = "red"; // Muito lixo
+            break;
+          default:
+            break;
+        }
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    setInterval(getTrashLevel, 5000); // Atualiza a cada 5 segundos
+  </script>
+</body>
+</html>
