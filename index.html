@@ -18,7 +18,7 @@
   <div id="trash-level"></div>
   <script>
     function getTrashLevel() {
-      fetch("https://api.github.com/repos/Saatake/lixeirainteligente/issues")
+      fetch("https://api.github.com/repos/Saatake/lixeirainteligente")
       .then(response => response.json())
       .then(data => {
         const trashLevel = JSON.parse(data[0].body.split(": ")[1]);
