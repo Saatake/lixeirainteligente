@@ -1,49 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lixeira Inteligente</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nível de Lixo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
+      margin-top: 50px;
     }
-    #trash-level {
-      font-size: 36px;
-      font-weight: bold;
+    #status {
+      font-size: 48px;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
-  <h1>NÍVEL DA LIXEIRA:</h1>
-  <div id="trash-level"></div>
+  <h1>Nível de Lixo:</h1>
+  <div id="status"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
   <script>
-    function getTrashLevel() {
-      fetch("https://api.github.com/repos/Saatake/lixeirainteligente/issues")
-      .then(response => response.json())
-      .then(data => {
-        const trashLevel = JSON.parse(data[0].body.split(": ")[1]);
-        const trashLevelDiv = document.getElementById("trash-level");
-        trashLevelDiv.innerText = trashLevel;
-        switch (trashLevel) {
-          case "1":
-            trashLevelDiv.style.color = "white"; // Nenhum lixo
-            break;
-          case "2":
-            trashLevelDiv.style.color = "yellow"; // Pouco lixo
-            break;
-          case "3":
-            trashLevelDiv.style.color = "orange"; // Bastante lixo
-            break;
-          case "4":
-            trashLevelDiv.style.color = "red"; // Muito lixo
-            break;
-          default:
-            break;
-        }
-      })
-      .catch(error => console.error("Error:", error));
-    }
-    setInterval(getTrashLevel, 5000); // Atualiza a cada 5 segundos
+    const firebaseConfig = {
+      apiKey: "AIzaSyAX0LGfhZLSOBvb_jdFI86Jtwy74WiyaeY",
+      databaseURL: "https://my-first-project.firebaseio.com",
+      projectId: "my-first-project",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const lixeiraRef = database.ref("/lixeira");
+
+    lixeiraRef.on("value", (snapshot) => {
+      const distancia = snapshot.val().distancia;
+      let statusElement = document.getElementById("status");
+      if (distancia > 30) {
+        statusElement.innerText = "Lixeira vazia! Nenhuma manutenção necessária!";
+        statusElement.style.color = "green";
+      } else if (distancia > 20) {
+        statusElement.innerText = "Pouco lixo! Nenhuma manutenção necessária!";
+        statusElement.style.color = "yellow";
+      } else if (distancia > 10) {
+        statusElement.innerText = "Bastante lixo! Manutenção se disponível!";
+        statusElement.style.color = "orange";
+      } else {
+        statusElement.innerText = "Lixeira cheia! Manutenção urgente!";
+        statusElement.style.color = "red";
+      }
+    });
   </script>
 </body>
 </html>
