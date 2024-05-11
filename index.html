@@ -11,64 +11,38 @@
       font-size: 36px;
       font-weight: bold;
     }
-    .none {
-      color: white;
-    }
-    .little {
-      color: yellow;
-    }
-    .lot {
-      color: orange;
-    }
-    .very-lot {
-      color: red;
-    }
   </style>
 </head>
 <body>
   <h1>NÍVEL DA LIXEIRA:</h1>
   <div id="trash-level"></div>
   <script>
-    function updateTrashLevel(trashLevel) {
-      const trashLevelDiv = document.getElementById("trash-level");
-      let trashMessage;
-      let trashClass;
-
-      switch (trashLevel) {
-        case "1":
-          trashMessage = "NENHUM LIXO!";
-          trashClass = "none";
-          break;
-        case "2":
-          trashMessage = "POUCO LIXO!";
-          trashClass = "little";
-          break;
-        case "3":
-          trashMessage = "BASTANTE LIXO!";
-          trashClass = "lot";
-          break;
-        case "4":
-          trashMessage = "MUITO LIXO!";
-          trashClass = "very-lot";
-          break;
-        default:
-          trashMessage = "Erro: Valor desconhecido";
-          trashClass = "";
-          break;
-      }
-
-      trashLevelDiv.innerHTML = `<span class="${trashClass}">${trashMessage}</span>`;
-    }
-
     function getTrashLevel() {
-      fetch("/update")
-      .then(response => response.text())
+      fetch("https://api.github.com/repos/Saatake/lixeirainteligente/issues")
+      .then(response => response.json())
       .then(data => {
-        updateTrashLevel(data);
+        const trashLevel = JSON.parse(data[0].body.split(": ")[1]);
+        const trashLevelDiv = document.getElementById("trash-level");
+        trashLevelDiv.innerText = trashLevel;
+        switch (trashLevel) {
+          case "1":
+            trashLevelDiv.style.color = "white"; // Nenhum lixo
+            break;
+          case "2":
+            trashLevelDiv.style.color = "yellow"; // Pouco lixo
+            break;
+          case "3":
+            trashLevelDiv.style.color = "orange"; // Bastante lixo
+            break;
+          case "4":
+            trashLevelDiv.style.color = "red"; // Muito lixo
+            break;
+          default:
+            break;
+        }
       })
-      .catch(error => console.error("Erro:", error));
+      .catch(error => console.error("Error:", error));
     }
-
     setInterval(getTrashLevel, 5000); // Atualiza a cada 5 segundos
   </script>
 </body>
