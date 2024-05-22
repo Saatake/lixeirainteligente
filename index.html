@@ -63,18 +63,18 @@
 
     function getLevelText(distance) {
       if (distance > 30) {
-        return "<span class='level green'>Nenhum lixo</span>";
+        return "<span class='green'>Nenhum lixo</span>";
       } else if (distance > 20) {
-        return "<span class='level yellow'>Pouco lixo</span>";
+        return "<span class='yellow'>Pouco lixo</span>";
       } else if (distance > 10) {
-        return "<span class='level orange'>Bastante lixo</span>";
+        return "<span class='orange'>Bastante lixo</span>";
       } else {
-        return "<span class='level red'>Muito lixo</span>";
+        return "<span class='red'>Muito lixo</span>";
       }
     }
 
     function fetchData() {
-      var url = https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey};
+      var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
 
       fetch(url)
         .then(response => response.json())
