@@ -50,8 +50,8 @@
   </style>
 </head>
 <body>
-  <h1 style="margin-top: 0;">Nível da Lixeira</h1>
   <div class="level-container">
+    <h1>Nível da Lixeira</h1>
     <div id="level" class="level">Carregando...</div>
   </div>
 
@@ -77,9 +77,18 @@
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          var distance = parseFloat(data.field1);
-          var levelText = getLevelText(distance);
-          document.getElementById('level').innerHTML = levelText;
+          if (data.created_at) {
+            var lastUpdate = new Date(data.created_at);
+            var now = new Date();
+            var diffMinutes = Math.floor((now - lastUpdate) / (1000 * 60)); // Diferença em minutos
+            if (diffMinutes > 2) {
+              document.getElementById('level').innerHTML = "Sem atualizações recentes";
+            } else {
+              var distance = parseFloat(data.field1);
+              var levelText = getLevelText(distance);
+              document.getElementById('level').innerHTML = levelText;
+            }
+          }
         })
         .catch(error => console.error('Erro ao buscar dados:', error));
     }
