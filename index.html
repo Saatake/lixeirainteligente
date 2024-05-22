@@ -1,55 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nível da Lixeira</title>
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f2f2f2;
-      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f2f2f2;
       transition: background-color 0.3s ease-in-out;
     }
 
-    .container {
+    .level-container {
       text-align: center;
+      margin-top: 20px;
     }
 
-    .title {
+    h1 {
       font-size: 36px;
       margin-top: 0;
-      color: #333;
-    }
-
-    .level-container {
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 20px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
     }
 
     .level {
-      font-size: 36px;
+      font-size: 200px;
       font-weight: bold;
-      padding: 10px 20px;
+      padding: 20px;
       border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 200px;
-      height: 100px;
-      line-height: 100px;
-      margin-bottom: 20px;
+      display: inline-block;
+      animation: fadeIn 1s ease-in-out;
     }
 
+    /* Estilos para diferentes níveis de lixo */
     .green { 
       background-color: #4CAF50;
       color: white;
@@ -78,40 +62,56 @@
         opacity: 1;
       }
     }
-
-    .fade-in {
-      animation: fadeIn 1s ease-in-out;
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">Nível da Lixeira</h1>
-    <div class="level-container">
-      <div id="level" class="level">Carregando...</div>
-    </div>
-    <div id="last-update" class="level" style="display:none;"></div>
+  <div class="level-container">
+    <h1>Nível da Lixeira</h1>
+    <div id="level" class="level">Carregando...</div>
   </div>
-  <script type="text/javascript">
-    const chaveApi = "HMKMBEFQ5VFKUD4A";
-    const idCanal = "2557355";
 
-    function getTrashCanLevel() {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', `https://api.thingspeak.com/channels/${idCanal}/fields/1.json?api_key=${chaveApi}&results=1`);
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          const distancia = response.feeds[0].field1;
-          updateTrashCanLevel(distancia);
-        } else {
-          console.error('Erro ao obter os dados.');
-        }
-      };
-      xhr.send();
+  <script type="text/javascript">
+    var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
+    var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
+
+    function getLevelText(distance) {
+      if (distance > 30) {
+        return "<span class='level green'>Nenhum lixo</span>";
+      } else if (distance > 20) {
+        return "<span class='level yellow'>Pouco lixo</span>";
+      } else if (distance > 10) {
+        return "<span class='level orange'>Bastante lixo</span>";
+      } else {
+        return "<span class='level red'>Muito lixo</span>";
+      }
     }
 
-    function updateTrashCanLevel(distancia) {
-      let levelText;
+    function fetchData() {
+      var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
 
-      if (
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.created_at) {
+            var lastUpdate = new Date(data.created_at);
+            var now = new Date();
+            var diffMinutes = Math.floor((now - lastUpdate) / (1000 * 60)); // Diferença em minutos
+            if (diffMinutes > 2) {
+              document.getElementById('level').innerHTML = "Sem atualizações recentes";
+            } else {
+              var distance = parseFloat(data.field1);
+              var levelText = getLevelText(distance);
+              document.getElementById('level').innerHTML = levelText;
+            }
+          }
+        })
+        .catch(error => console.error('Erro ao buscar dados:', error));
+    }
+
+    // Fetch data on page loadfetchData();
+
+    // Fetch data every 15 seconds
+    setInterval(fetchData, 15000);
+  </script>
+</body>
+</html>
