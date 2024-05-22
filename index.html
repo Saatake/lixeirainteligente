@@ -1,62 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nível da Lixeira</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .title {
+      font-size: 36px;
+      margin-top: 0;
+      color: #333;
     }
 
     .level-container {
-      text-align: center;
       margin-top: 20px;
-    }
-
-    h1 {
-      font-size: 36px; /* Tamanho grande de fonte */
-      margin-top: 0;
+      padding: 20px;
+      border-radius: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
     }
 
     .level {
-      font-size: 200px; /* Tamanho muito grande de fonte */
+      font-size: 100px;
       font-weight: bold;
-      padding: 20px;
-      border-radius: 20px; /* Bordas arredondadas */
-      display: inline-block; /* Para que a borda se ajuste ao texto */
+      padding: 10px 20px;
+      border-radius: 20px;
     }
 
-    /* Estilos para diferentes níveis de lixo */
     .green { 
-      background-color: #4CAF50; /* Verde */
+      background-color: #4CAF50;
       color: white;
     }
 
     .yellow { 
-      background-color: #FFD700; /* Amarelo */
+      background-color: #FFD700;
       color: black;
     }
 
     .orange { 
-      background-color: #FFA500; /* Laranja */
+      background-color: #FFA500;
       color: white;
     }
 
     .red { 
-      background-color: #FF6347; /* Vermelho */
+      background-color: #FF6347;
       color: white;
     }
   </style>
 </head>
 <body>
-  <div class="level-container">
-    <h1>Nível da Lixeira</h1>
-    <div id="level" class="level">Carregando...</div>
+  <div class="container">
+    <h1 class="title">Nível da Lixeira</h1>
+    <div class="level-container" id="level-container">
+      <div id="level" class="level">Carregando...</div>
+    </div>
   </div>
-
   <script type="text/javascript">
     var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
     var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
