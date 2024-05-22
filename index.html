@@ -1,55 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nível de Lixo</title>
+  <title>Nível da Lixeira</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    #status {
-      font-size: 48px;
-      text-transform: uppercase;
+    .level {
+      font-size: 24px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Nível de Lixo:</h1>
-  <div id="status"></div>
+  <h1>Nível da Lixeira</h1>
+  <div id="level" class="level">Carregando...</div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAX0LGfhZLSOBvb_jdFI86Jtwy74WiyaeY",
-      databaseURL: "https://my-first-project.firebaseio.com",
-      projectId: "my-first-project",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const lixeiraRef = database.ref("/lixeira");
+  <script type="text/javascript">
+    var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
+    var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
 
-    lixeiraRef.on("value", (snapshot) => {
-      const distancia = snapshot.val().distancia;
-      let statusElement = document.getElementById("status");
-      if (distancia > 30) {
-        statusElement.innerText = "Lixeira vazia! Nenhuma manutenção necessária!";
-        statusElement.style.color = "green";
-      } else if (distancia > 20) {
-        statusElement.innerText = "Pouco lixo! Nenhuma manutenção necessária!";
-        statusElement.style.color = "yellow";
-      } else if (distancia > 10) {
-        statusElement.innerText = "Bastante lixo! Manutenção se disponível!";
-        statusElement.style.color = "orange";
+    function getLevelText(distance) {
+      if (distance > 30) {
+        return "Nenhum lixo";
+      } else if (distance > 20) {
+        return "Pouco lixo";
+      } else if (distance > 10) {
+        return "Bastante lixo";
       } else {
-        statusElement.innerText = "Lixeira cheia! Manutenção urgente!";
-        statusElement.style.color = "red";
+        return "Muito lixo";
       }
-    });
+    }
+
+    function fetchData() {
+      var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          var distance = parseFloat(data.field1);
+          var levelText = getLevelText(distance);
+          document.getElementById('level').innerText = levelText;
+        })
+        .catch(error => console.error('Erro ao buscar dados:', error));
+    }
+
+    // Fetch data on page load
+    fetchData();
+
+    // Fetch data every 15 seconds
+    setInterval(fetchData, 15000);
   </script>
 </body>
 </html>
