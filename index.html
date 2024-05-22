@@ -6,10 +6,10 @@
   <title>Nível da Lixeira</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f2f2f2; /* Cinza claro */
+      background-color: #f2f2f2;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -17,30 +17,26 @@
     }
 
     .container {
-      max-width: 400px; 
-      margin: 0 auto;
-      padding: 20px;
-      border-radius: 20px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
-    .titulo {
+    .title {
       font-size: 36px;
       margin-top: 0;
       color: #333;
-      text-align: center; 
     }
 
-    .nivelContainer {
+    .level-container {
       margin-top: 20px;
       padding: 20px;
       border-radius: 20px;
       background-color: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
     }
 
-    .nivel {
+    .level {
       font-size: 36px;
       font-weight: bold;
       padding: 10px 20px;
@@ -53,77 +49,52 @@
       margin-bottom: 20px;
     }
 
-    .verde { 
+    .green {
       background-color: #4CAF50;
       color: white;
     }
 
-    .amarelo { 
+    .yellow {
       background-color: #FFD700;
       color: black;
     }
 
-    .laranja { 
+    .orange {
       background-color: #FFA500;
       color: white;
     }
 
-    .vermelho { 
+    .red {
       background-color: #FF6347;
       color: white;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="titulo">Nível da Lixeira</h1>
-    <div class="nivelContainer" id="nivelContainer">
-      <div id="nivel" class="nivel">Carregando...</div>
+    <h1 class="title">Nível da Lixeira</h1>
+    <div class="level-container" id="level-container">
+      <div id="level" class="level">Carregando...</div>
     </div>
   </div>
   <script type="text/javascript">
-    var chaveApi = "HMKMBEFQ5VFKUD4A"; // API key ThingSpeak
-    var idCanal = "2557355";  // Channel ID ThingSpeak
+    var chaveApi = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
+    var idCanal = "2557355";  // Substitua com seu Channel ID do ThingSpeak
 
     function getTextoNivel(distancia) {
       if (distancia > 30) {
-        return "<span class='nivel verde'>Nenhum lixo</span>";
+        return "<span class='level green'>Nenhum lixo</span>";
       } else if (distancia > 20) {
-        return "<span class='nivel amarelo'>Pouco lixo</span>";
-      } else if (distancia > 10) {
-        return "<span class='nivel laranja'>Bastante lixo</span>";
-      } else {
-        return "<span class='nivel vermelho'>Muito lixo</span>";
-      }
-    }
-
-    function buscarDados() {
-      var url = `https://api.thingspeak.com/channels/${idCanal}/fields/1/last.json?api_key=${chaveApi}`;
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          if (data.created_at) {
-            var ultimoUpdate = new Date(data.created_at);
-            var agora = new Date();
-            var diferencaMinutos = Math.floor((agora - ultimoUpdate) / (1000 * 60)); // Diferença em minutos
-            if (diferencaMinutos > 2) {
-              document.getElementById('nivel').innerHTML = "Sem atualizações recentes";
-            } else {
-              var distancia = parseFloat(data.field1);
-              var textoNivel = getTextoNivel(distancia);
-              document.getElementById('nivel').innerHTML = textoNivel;
-            }
-          }
-        })
-        .catch(error => console.error('Erro ao buscar dados:', error));
-    }
-
-    // Buscar dados ao carregar a página
-    buscarDados();
-
-    // Buscar dados a cada 15 segundos
-    setInterval(buscarDados, 15000);
-  </script>
-</body>
-</html>
+        return "<span class='level yellow'>Pouco lixo</span>";
+      } else if (distancia > 
