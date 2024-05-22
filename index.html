@@ -4,15 +4,19 @@
   <title>Nível da Lixeira</title>
   <style>
     body {
-      text-align: center; /* Centralizar o conteúdo na página */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    h1 {
-      font-size: 36px; /* Tamanho grande de fonte */
+    .level-container {
+      text-align: center;
     }
 
     .level {
-      font-size: 48px; /* Tamanho muito grande de fonte */
+      font-size: 72px; /* Tamanho muito grande de fonte */
       font-weight: bold;
       padding: 20px;
       border-radius: 20px; /* Bordas arredondadas */
@@ -42,8 +46,10 @@
   </style>
 </head>
 <body>
-  <h1>Nível da Lixeira</h1>
-  <div id="level" class="level">Carregando...</div>
+  <div class="level-container">
+    <h1>Nível da Lixeira</h1>
+    <div id="level" class="level">Carregando...</div>
+  </div>
 
   <script type="text/javascript">
     var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
