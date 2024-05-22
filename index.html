@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f2f2f2; /* Alterado para um cinza claro */
+      background-color: #f2f2f2; /* Cinza claro */
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -17,26 +17,31 @@
     }
 
     .container {
-      text-align: center;
+      max-width: 400px; 
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .title {
+    .titulo {
       font-size: 36px;
       margin-top: 0;
       color: #333;
+      text-align: center; 
     }
 
-    .level-container {
+    .nivelContainer {
       margin-top: 20px;
       padding: 20px;
       border-radius: 20px;
       background-color: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease-in-out;
     }
 
-    .level {
-      font-size: 36px; /* Alterado para um tamanho menor */
+    .nivel {
+      font-size: 36px;
       font-weight: bold;
       padding: 10px 20px;
       border-radius: 20px;
@@ -48,22 +53,22 @@
       margin-bottom: 20px;
     }
 
-    .green { 
+    .verde { 
       background-color: #4CAF50;
       color: white;
     }
 
-    .yellow { 
+    .amarelo { 
       background-color: #FFD700;
       color: black;
     }
 
-    .orange { 
+    .laranja { 
       background-color: #FFA500;
       color: white;
     }
 
-    .red { 
+    .vermelho { 
       background-color: #FF6347;
       color: white;
     }
@@ -71,54 +76,54 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title">Nível da Lixeira</h1>
-    <div class="level-container" id="level-container">
-      <div id="level" class="level">Carregando...</div>
+    <h1 class="titulo">Nível da Lixeira</h1>
+    <div class="nivelContainer" id="nivelContainer">
+      <div id="nivel" class="nivel">Carregando...</div>
     </div>
   </div>
   <script type="text/javascript">
-    var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
-    var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
+    var chaveApi = "HMKMBEFQ5VFKUD4A"; // API key ThingSpeak
+    var idCanal = "2557355";  // Channel ID ThingSpeak
 
-    function getLevelText(distance) {
-      if (distance > 30) {
-        return "<span class='level green'>Nenhum lixo</span>";
-      } else if (distance > 20) {
-        return "<span class='level yellow'>Pouco lixo</span>";
-      } else if (distance > 10) {
-        return "<span class='level orange'>Bastante lixo</span>";
+    function getTextoNivel(distancia) {
+      if (distancia > 30) {
+        return "<span class='nivel verde'>Nenhum lixo</span>";
+      } else if (distancia > 20) {
+        return "<span class='nivel amarelo'>Pouco lixo</span>";
+      } else if (distancia > 10) {
+        return "<span class='nivel laranja'>Bastante lixo</span>";
       } else {
-        return "<span class='level red'>Muito lixo</span>";
+        return "<span class='nivel vermelho'>Muito lixo</span>";
       }
     }
 
-    function fetchData() {
-      var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
+    function buscarDados() {
+      var url = `https://api.thingspeak.com/channels/${idCanal}/fields/1/last.json?api_key=${chaveApi}`;
 
       fetch(url)
         .then(response => response.json())
         .then(data => {
           if (data.created_at) {
-            var lastUpdate = new Date(data.created_at);
-            var now = new Date();
-            var diffMinutes = Math.floor((now - lastUpdate) / (1000 * 60)); // Diferença em minutos
-            if (diffMinutes > 2) {
-              document.getElementById('level').innerHTML = "Sem atualizações recentes";
+            var ultimoUpdate = new Date(data.created_at);
+            var agora = new Date();
+            var diferencaMinutos = Math.floor((agora - ultimoUpdate) / (1000 * 60)); // Diferença em minutos
+            if (diferencaMinutos > 2) {
+              document.getElementById('nivel').innerHTML = "Sem atualizações recentes";
             } else {
-              var distance = parseFloat(data.field1);
-              var levelText = getLevelText(distance);
-              document.getElementById('level').innerHTML = levelText;
+              var distancia = parseFloat(data.field1);
+              var textoNivel = getTextoNivel(distancia);
+              document.getElementById('nivel').innerHTML = textoNivel;
             }
           }
         })
         .catch(error => console.error('Erro ao buscar dados:', error));
     }
 
-    // Fetch data on page load
-    fetchData();
+    // Buscar dados ao carregar a página
+    buscarDados();
 
-    // Fetch data every 15 seconds
-    setInterval(fetchData, 15000);
+    // Buscar dados a cada 15 segundos
+    setInterval(buscarDados, 15000);
   </script>
 </body>
 </html>
