@@ -3,9 +3,37 @@
 <head>
   <title>Nível da Lixeira</title>
   <style>
+    body {
+      text-align: center; /* Centralizar o conteúdo na página */
+    }
+
     .level {
       font-size: 24px;
       font-weight: bold;
+      padding: 10px;
+      border-radius: 20px; /* Bordas arredondadas */
+      display: inline-block; /* Para que a borda se ajuste ao texto */
+    }
+
+    /* Estilos para diferentes níveis de lixo */
+    .green { 
+      background-color: #4CAF50; /* Verde */
+      color: white;
+    }
+
+    .yellow { 
+      background-color: #FFD700; /* Amarelo */
+      color: black;
+    }
+
+    .orange { 
+      background-color: #FFA500; /* Laranja */
+      color: white;
+    }
+
+    .red { 
+      background-color: #FF6347; /* Vermelho */
+      color: white;
     }
   </style>
 </head>
@@ -19,13 +47,13 @@
 
     function getLevelText(distance) {
       if (distance > 30) {
-        return "Nenhum lixo";
+        return "<span class='level green'>Nenhum lixo</span>";
       } else if (distance > 20) {
-        return "Pouco lixo";
+        return "<span class='level yellow'>Pouco lixo</span>";
       } else if (distance > 10) {
-        return "Bastante lixo";
+        return "<span class='level orange'>Bastante lixo</span>";
       } else {
-        return "Muito lixo";
+        return "<span class='level red'>Muito lixo</span>";
       }
     }
 
@@ -37,7 +65,7 @@
         .then(data => {
           var distance = parseFloat(data.field1);
           var levelText = getLevelText(distance);
-          document.getElementById('level').innerText = levelText;
+          document.getElementById('level').innerHTML = levelText;
         })
         .catch(error => console.error('Erro ao buscar dados:', error));
     }
