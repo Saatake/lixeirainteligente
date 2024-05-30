@@ -62,16 +62,22 @@
     var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
 
     function getLevelText(distance) {
-      if (distance > 15) {
-        return "<span class='green'>Nenhum lixo</span>";
-      } else if (distance > 12) {
-        return "<span class='yellow'>Pouco lixo</span>";
-      } else if (distance > 8) {
-        return "<span class='orange'>Bastante lixo</span>";
-      } else {
-        return "<span class='red'>Muito lixo</span>";
-      }
-    }
+  console.log("Distância recebida:", distance);
+  if (distance > 14) {
+    console.log("Nenhum lixo");
+    return "<span class='green'>Nenhum lixo</span>";
+  } else if (distance > 11) {
+    console.log("Pouco lixo");
+    return "<span class='yellow'>Pouco lixo</span>";
+  } else if (distance > 7) {
+    console.log("Bastante lixo");
+    return "<span class='orange'>Bastante lixo</span>";
+  } else {
+    console.log("Muito lixo");
+    return "<span class='red'>Muito lixo</span>";
+  }
+}
+
 
     function fetchData() {
       var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
