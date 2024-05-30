@@ -61,15 +61,15 @@
     var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
     var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
 
-    function getLevelText(distance) {
-  console.log("Distância recebida:", distance);
-  if (distance > 14) {
+    function getLevelText(level) {
+  console.log("Nível recebido:", level);
+  if (level == 1) {
     console.log("Nenhum lixo");
     return "<span class='green'>Nenhum lixo</span>";
-  } else if (distance > 11) {
+  } else if (level == 2) {
     console.log("Pouco lixo");
     return "<span class='yellow'>Pouco lixo</span>";
-  } else if (distance > 7) {
+  } else if (level == 3) {
     console.log("Bastante lixo");
     return "<span class='orange'>Bastante lixo</span>";
   } else {
@@ -77,6 +77,7 @@
     return "<span class='red'>Muito lixo</span>";
   }
 }
+
 
 
     function fetchData() {
