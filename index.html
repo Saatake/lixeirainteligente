@@ -1,45 +1,98 @@
-<script type="text/javascript">
-  var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
-  var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
-
-  function getLevelText(distance) {
-    if (distance > 14) {
-      return "<span class='green'>Nenhum lixo</span>";
-    } else if (distance > 11) {
-      return "<span class='yellow'>Pouco lixo</span>";
-    } else if (distance > 7) {
-      return "<span class='orange'>Bastante lixo</span>";
-    } else {
-      return "<span class='red'>Muito lixo</span>";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nível da Lixeira</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-  }
 
-  function fetchData() {
-    var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
+    .level-container {
+      text-align: center;
+      margin-top: 20px;
+    }
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log("Dados recebidos do ThingSpeak:", data);
-        if (data.created_at) {
-          var lastUpdate = new Date(data.created_at);
-          var now = new Date();
-          var diffMinutes = Math.floor((now - lastUpdate) / (1000 * 60)); // Diferença em minutos
-          if (diffMinutes > 2) {
-            document.getElementById('level').innerHTML = "Sem atualizações recentes";
-          } else {
-            var level = parseInt(data.field1); // Converter para inteiro
+    h1 {
+      font-size: 36px; /* Tamanho grande de fonte */
+      margin-top: 0;
+    }
+
+    .level {
+      font-size: 200px; /* Tamanho muito grande de fonte */
+      font-weight: bold;
+      padding: 20px;
+      border-radius: 20px; /* Bordas arredondadas */
+      display: inline-block; /* Para que a borda se ajuste ao texto */
+    }
+
+    /* Estilos para diferentes níveis de lixo */
+    .green { 
+      background-color: #4CAF50; /* Verde */
+      color: white;
+    }
+
+    .yellow { 
+      background-color: #FFD700; /* Amarelo */
+      color: black;
+    }
+
+    .orange { 
+      background-color: #FFA500; /* Laranja */
+      color: white;
+    }
+
+    .red { 
+      background-color: #FF6347; /* Vermelho */
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="level-container">
+    <h1>Nível da Lixeira</h1>
+    <div id="level" class="level">Carregando...</div>
+  </div>
+
+  <script type="text/javascript">
+    var apiKey = "HMKMBEFQ5VFKUD4A"; // Substitua com sua Read API Key do ThingSpeak
+    var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
+
+    function getLevelText(level) {
+      if (level == 1) {
+        return "<span class='green'>Nenhum lixo</span>";
+      } else if (level == 2) {
+        return "<span class='yellow'>Pouco lixo</span>";
+      } else if (level == 3) {
+        return "<span class='orange'>Bastante lixo</span>";
+      } else {
+        return "<span class='red'>Muito lixo</span>";
+      }
+    }
+
+    function fetchData() {
+      var url = `https://api.thingspeak.com/channels/${channelID}/fields/1/last.json?api_key=${apiKey}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.created_at) {
+            var level = parseInt(data.field1);
             var levelText = getLevelText(level);
             document.getElementById('level').innerHTML = levelText;
           }
-        }
-      })
-      .catch(error => console.error('Erro ao buscar dados:', error));
-  }
+        })
+        .catch(error => console.error('Erro ao buscar dados:', error));
+    }
 
-  // Fetch data on page load
-  fetchData();
+    // Fetch data on page load
+    fetchData();
 
-  // Fetch data every 15 seconds
-  setInterval(fetchData, 15000);
-</script>
+    // Fetch data every 15 seconds
+    setInterval(fetchData, 15000);
+  </script>
+</body>
+</html>
