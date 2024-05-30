@@ -62,11 +62,11 @@
     var channelID = "2557355";  // Substitua com seu Channel ID do ThingSpeak
 
     function getLevelText(distance) {
-      if (distance > 30) {
+      if (distance > 10 {
         return "<span class='green'>Nenhum lixo</span>";
-      } else if (distance > 20) {
+      } else if (distance > 7) {
         return "<span class='yellow'>Pouco lixo</span>";
-      } else if (distance > 10) {
+      } else if (distance > 4) {
         return "<span class='orange'>Bastante lixo</span>";
       } else {
         return "<span class='red'>Muito lixo</span>";
